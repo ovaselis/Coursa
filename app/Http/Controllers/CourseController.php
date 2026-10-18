@@ -33,6 +33,7 @@ class CourseController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'official_url' => 'nullable|url|max:255',
+            'lecturer' => 'nullable|string|max:255',
             'info' => 'nullable|string'
         ]);
 
@@ -47,32 +48,42 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Course $course)
     {
-        //
+        return view('courses.show', compact('course'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Course $course)
     {
-        //
+        return view('courses.edit',compact('course'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Course $course)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'official_url' => 'nullable|url|max:255',
+            'lecturer' => 'nullable|string|max:255',
+            'info' => 'nullable|string'
+        ]);
+
+        $course->update($validated);
+
+        return redirect()->route('courses.show', $course);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Course $course)
     {
-        //
+        $course->delete();
+        return redirect()->route('courses.index');
     }
 }

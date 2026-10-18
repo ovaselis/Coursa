@@ -1,7 +1,17 @@
 <h1> Courses </h1>
 
-<a href="{{ route('courses.create') }}">Pievienot kursu</a>
+<a href="{{ route('courses.create') }}">Add a course</a>
+
+<br>
+<br>
 
 @foreach($courses as $course)
-    <p>{{ $course->name }}</p>
+
+    <a href="{{ route('courses.show', $course) }}">
+    {{ $course->name }} 
+    </a>
+
+    <br>
+    <br>
+
 @endforeach

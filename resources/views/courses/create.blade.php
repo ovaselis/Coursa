@@ -20,7 +20,7 @@
 
     <div>
         <label for="info">Additional info</label>
-        <textarea name="info" id="info" value="{{ old('info') }}"></textarea>
+        <textarea name="info" id="info">{{ old('info') }}</textarea>
     </div>
 
     <button type="submit">Saglabāt</button>
