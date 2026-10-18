@@ -8,8 +8,10 @@ class Course extends Model
 {
     protected $fillable = [
         'user_id',
-	'name',
-	'description',
+        'name',
+        'official_url',
+        'lecturer',
+        'info',
     ];   
 
     public function user()
