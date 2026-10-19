@@ -8,10 +8,11 @@ class Note extends Model
 {
     protected $fillable = [
 	'lecture_id',
+    'title',
 	'content',
     ];
 
-    public funtion lecture()
+    public function lecture()
     {
 	return $this->belongsTo(Lecture::class);
     }
