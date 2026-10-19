@@ -24,3 +24,17 @@
 
     <button type="submit">Delete course</button>
 </form>
+
+<h2>Lectures</h2>
+
+<a href="{{ route('courses.lectures.create', $course) }}">
+    Add lecture
+</a>
+
+@foreach($course->lectures as $lecture)
+    <div>
+        <a href="{{ route('courses.lectures.show', [$course, $lecture]) }}">
+            {{ $lecture->title }}
+        </a>
+    </div>
+@endforeach

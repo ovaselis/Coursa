@@ -9,6 +9,8 @@ class Lecture extends Model
     protected $fillable = [
 	'course_id',
 	'title',
+    'info',
+    'date',
     ];
  
     public function course()
