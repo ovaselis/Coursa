@@ -10,7 +10,7 @@ class CourseController extends Controller
   
     public function index()
     {
-        $courses = Course::all(); // gets all the courses
+        $courses = auth()->user()->courses; // gets all the users courses
 
         return view('courses.index', compact('courses'));
     }
@@ -30,7 +30,7 @@ class CourseController extends Controller
         ]);
 
 
-        $validated['user_id'] = 1;
+        $validated['user_id'] = auth()->id();
 
         Course::create($validated);
 
@@ -39,16 +39,22 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
+        abort_if($course->user_id !== auth()->id(), 403);
+
         return view('courses.show', compact('course'));
     }
 
     public function edit(Course $course)
     {
+        abort_if($course->user_id !== auth()->id(), 403);
+
         return view('courses.edit',compact('course'));
     }
 
     public function update(Request $request, Course $course)
     {
+        abort_if($course->user_id !== auth()->id(), 403);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'official_url' => 'nullable|url|max:255',
@@ -64,6 +70,8 @@ class CourseController extends Controller
 
     public function destroy(Course $course)
     {
+        abort_if($course->user_id !== auth()->id(), 403);
+
         $course->delete();
         return redirect()->route('courses.index');
     }

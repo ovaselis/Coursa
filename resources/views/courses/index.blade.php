@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1> Courses </h1>
 
 <a href="{{ route('courses.create') }}">Add a course</a>
@@ -15,3 +19,4 @@
     <br>
 
 @endforeach
+@endsection
