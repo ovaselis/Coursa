@@ -11,3 +11,25 @@
 @theme {
     --font-bright-retro: "BrightRetro", serif;
 }
+
+.tiptap {
+    min-height: 20rem;
+    min-width: 20rem;
+    outline: none;
+}
+
+.tiptap h1 {
+    @apply text-3xl font-bold mt-6 mb-4;
+}
+
+.tiptap ul {
+    @apply list-disc pl-6 my-4;
+}
+
+.tiptap ol {
+    @apply list-decimal pl-6 my-4;
+}
+
+.tiptap li {
+    @apply my-1;
+}

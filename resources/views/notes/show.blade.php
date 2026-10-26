@@ -10,7 +10,7 @@
 </p>
 
 <div>
-    {{ $note->content }}
+    {!! Illuminate\Support\Str::markdown($note->content) !!}
 </div>
 
 <a href="{{ route('courses.lectures.notes.edit', [$course, $lecture, $note]) }}">
