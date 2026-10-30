@@ -21,37 +21,7 @@
         >
     </div>
 
-    <div>
-        <label for="note-content">Content</label>
-        
-        <div class="mb-3 flex gap-2">
-            
-            <button type="button" id="bold-button">
-                Bold
-            </button>
-
-            <button type="button" id="italic-button">
-                Italic
-            </button>
-
-            <button type="button" id="h1-button">
-                H1
-            </button>
-
-            <button type="button" id="bullet-list-button">
-                List
-            </button>
-
-        </div>
-
-        <div id="tiptap-editor" class="border"></div>
-        <input 
-            type="hidden"
-            id="note-content"
-            name="content"
-            value="{{ old('content') }}">
-         
-    </div>
+    <x-editor :content="old('content')" />
 
     <button type="submit">Save note</button>
 </form>

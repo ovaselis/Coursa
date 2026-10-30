@@ -13,13 +13,20 @@
 }
 
 .tiptap {
-    min-height: 20rem;
-    min-width: 20rem;
-    outline: none;
+    min-height: 30rem;
+    min-width: 30rem;
 }
 
 .tiptap h1 {
-    @apply text-3xl font-bold mt-6 mb-4;
+    @apply text-3xl font-bold;
+}
+
+.tiptap h2 {
+    @apply text-2xl font-bold;
+}
+
+.tiptap h3 {
+    @apply text-xl font-semibold;
 }
 
 .tiptap ul {
@@ -32,4 +39,8 @@
 
 .tiptap li {
     @apply my-1;
+}
+
+.toolbar-button.is-active {
+    @apply bg-gray-900 text-white border-gray-900;
 }
