@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1>Lectures - {{ $course->name }}</h1>
 
 <a href="{{ route('courses.show', $course) }}">Back to course</a>
@@ -19,3 +23,5 @@
     </div>
 
 @endforeach
+
+@endsection

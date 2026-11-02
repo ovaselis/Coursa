@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1>Add a course</h1>
 
 <form method="POST" action="{{ route('courses.store') }}">
@@ -27,3 +31,5 @@
 
 
 </form>
+
+@endsection

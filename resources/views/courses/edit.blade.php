@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1>Edit course</h1>
 
 <form method="POST" action=" {{ route('courses.update', $course) }} ">
@@ -44,3 +48,4 @@
 
 </form>
 
+@endsection

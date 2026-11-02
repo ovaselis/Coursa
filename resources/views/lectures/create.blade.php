@@ -1,4 +1,8 @@
-<h1>Add lecture to {{ $course->name }}</h1>
+
+
+@extends('layouts.app')
+
+@section('content')<h1>Add lecture to {{ $course->name }}</h1>
 
 <form method="POST" action="{{ route('courses.lectures.store', $course) }}">
     @csrf
@@ -31,3 +35,5 @@
     <button type="submit">Save lecture</button>
 
 </form>
+
+@endsection

@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1>Edit note</h1>
 
 <form method="POST" action="{{ route('courses.lectures.notes.update', [$course, $lecture, $note]) }}">
@@ -25,3 +29,5 @@
 
     <button type="submit">Save changes</button>
 </form>
+
+@endsection

@@ -18,9 +18,9 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->string('type');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->dateTime('starts_at');
-            $table->dateTime('ends_at');
+            $table->dateTime('ends_at')->nullable();
             $table->boolean('is_completed')->default(false);
             $table->timestamps();
         });

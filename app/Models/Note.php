@@ -17,4 +17,9 @@ class Note extends Model
 	return $this->belongsTo(Lecture::class);
     }
 
+    public function flashcards()
+    {
+        return $this->hasMany(Flashcard::class);
+    }
+
 }
