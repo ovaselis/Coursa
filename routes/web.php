@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\FlashcardController;
+use App\Http\Controllers\TaskController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,9 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/calendar/events', [CalendarController::class, 'storeEvent'])
     ->name('calendar.events.store');
 
-    Route::get('/ollama-test', [FlashcardController::class, 'testOllama'])
-    ->name('ollama.test');
+    Route::get('/tasks', [TaskController::class, 'index'])
+    ->name('tasks.index');
 
+    Route::post('/tasks', [TaskController::class, 'store'])
+    ->name('tasks.store');
+
+    Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
 
     Route::post('/notes/{note}/flashcards/generate',[FlashcardController::class, 'generate'])->name('flashcards.generate');
 

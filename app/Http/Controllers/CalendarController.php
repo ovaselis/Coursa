@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\CalendarEvent;
+use App\Models\Task;
+use App\Models\Assessment;
+use App\Models\ScheduledLecture;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -19,21 +21,39 @@ class CalendarController extends Controller
 
         $calendarEnd = $currentMonth->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY); //last visable day in the calendar
 
-        $events = CalendarEvent::whereHas('course', function ($query){
-            $query->where('user_id', auth()->id()); // Only gets those events whose course nelongs to the authentificated user
+        $tasks = Task::whereHas('course', function($query){
+            $query->where('user_id', auth()->id());
         })
-        ->whereBetween('starts_at', [$calendarStart, $calendarEnd]) // only those events who in the visable calendar
-        ->orderBy('starts_at')
-        ->get(); // executes the query and gets the events
+        ->whereBetween('deadline', [$calendarStart, $calendarEnd])
+        ->orderBy('deadline')
+        ->get();
        
-        $events = $events->groupBy(function ($event) { // groups events by date
-            return $event->starts_at->format('Y-m-d');
-        });
+
+        $assessments = Assessment::whereHas('course', function($query){
+            $query->where('user_id', auth()->id());
+        })
+        ->whereBetween('date', [
+            $calendarStart->toDateString(),
+            $calendarEnd->toDateString()
+        ])
+        ->orderBy('date')
+        ->get();
+
+        $scheduledLectures = ScheduledLecture::whereHas('course', function($query){
+            $query->where('user_id', auth()->id());
+        })
+        ->whereBetween('date', [
+            $calendarStart->toDateString(),
+            $calendarEnd->toDateString()
+        ])
+        ->orderBy('date')
+        ->get();
+
 
         $courses = auth()->user()->courses; //passes users courses to calendar
 
 
-        return view('calendar.index', compact('events','currentMonth','calendarStart','calendarEnd', 'courses')); //opens calendar and passes the selected events
+        return view('calendar.index', compact('tasks', 'assessments', 'scheduledLectures' , 'currentMonth','calendarStart','calendarEnd', 'courses'));
     }
 
     public function storeEvent(Request $request)
@@ -43,35 +63,56 @@ class CalendarController extends Controller
             'type' => 'required|in:lecture,task,assessment',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'link' => 'nullable|string',
             'date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'nullable|after_or_equal:start_time',
+            'start_time' => 'nullable',
+            'end_time' => 'nullable',
         ]);
         //checks if the selected course belongs to the user
         $course = auth()->user()->courses()->findOrFail($validated['course_id']);
 
-        $startsAt = Carbon::parse($validated['date'] . ' ' . $validated['start_time']);
+        if($validated['type'] === 'task'){
+            
+            Task::create([
+                'course_id' => $course->id,
+                'title' => $validated['title'],
+                'deadline' =>$validated['date'],
+                'description' =>$validated['description'] ?? null,
+                'link' =>$validated['link'] ?? null,
+                'is_completed' => false,
+            ]);
 
-        $endsAt = null;
-
-        if (!empty($validated['end_time'])) {
-            $endsAt = Carbon::parse(
-                $validated['date'] . ' ' . $validated['end_time']
-            );
         }
 
-        
+        if($validated['type'] === 'assessment'){
+            
+            Assessment::create([
+                'course_id' => $course->id,
+                'title' => $validated['title'],
+                'date' =>$validated['date'],
+                'description' =>$validated['description'] ?? null,
+                'link' =>$validated['link'] ?? null,
+            ]);
 
-        
-        CalendarEvent::create([
-            'course_id' => $course->id,
-            'type' => $validated['type'],
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'starts_at' => $startsAt,
-            'ends_at' => $endsAt,
-            'is_completed' => false,
-        ]);
+        }
+
+        if($validated['type'] === 'lecture'){
+            
+            //Lecture meeds start and end time
+            $request->validate([
+                'start_time' => 'required',
+                'end_time' => 'required|after:start_time'
+            ])   ;
+
+            ScheduledLecture::create([
+                'course_id' => $course->id,
+                'title' => $validated['title'],
+                'date' =>$validated['date'],
+                'time_from' =>$validated['start_time'],
+                'time_to' =>$validated['end_time'],
+            ]);
+
+        }
 
 
 

@@ -25,7 +25,9 @@ class NoteController extends Controller
         abort_if($course->user_id !== auth()->id(), 403);
         abort_if($lecture->course_id !== $course->id, 404);
 
-        return view('notes.create', compact('course', 'lecture'));
+        $note = null;
+
+        return view('notes.editor', compact('course', 'lecture', 'note'));
     }
 
     public function store(Request $request, Course $course, Lecture $lecture)
@@ -63,7 +65,7 @@ class NoteController extends Controller
         abort_if($lecture->course_id !== $course->id, 404);
         abort_if($note->lecture_id !== $lecture->id, 404);
 
-        return view('notes.edit', compact('course', 'lecture', 'note'));
+        return view('notes.editor', compact('course', 'lecture', 'note'));
     }
 
     public function update(Request $request, Course $course, Lecture $lecture, Note $note)

@@ -3,7 +3,7 @@
 @section('content')
 
 
-<div class="w-full" x-data="{open: false, selectedDate: ''}">
+<div class="w-full" x-data="{open: false, selectedDate: '', eventType: ''}">
     <div class="flex items-center justify-between">
         <div>
             <h1>{{ $currentMonth->format('F Y') }}</h1>
@@ -59,40 +59,40 @@
                         </span>
                     </div>
 
-                    {{-- Checks if this day contains events --}}
-                    @if(isset($events[$dateKey]))
-                        <div class="space-y-1">
-                            {{-- Displays all events for this date --}}
-                            @foreach($events[$dateKey] as $event)
-                                <a @click.stop href="{{ route('courses.calendar-events.show',[$event->course, $event]) }}"
-                                    class=" block px-2 py-1 rounded text-xs
+                    @php
+                        $dayTasks = $tasks->filter(function($task) use ($dateKey){
+                            return $task->deadline->format('Y-m-d') === $dateKey;
+                        });
+                        $dayAssessments = $assessments->filter(function($assessment) use ($dateKey){
+                            return $assessment->date->format('Y-m-d') === $dateKey;
+                        });
+                        $dayLectures = $scheduledLectures->filter(function($scheduledLecture) use ($dateKey){
+                            return $scheduledLecture->date->format('Y-m-d') === $dateKey;
+                        });
+                    @endphp
 
-                                        @if($event->type === 'task' && $event->is_completed)
-                                            bg-gray-200 text-gray-500 line-through
-                                        @elseif($event->type === 'lecture')
-                                            bg-blue-100 text-blue-800
-                                        @elseif($event->type === 'task')
-                                            bg-amber-100 text-amber-800
-                                        @elseif($event->type === 'assessment')
-                                            bg-red-100 text-red-800
-                                        @endif
-                                        "
-                                >
-                                    {{-- Event time --}}
-                                    {{ $event->starts_at->format('H:i') }}
+                    <div class="space-y-1">
+                        @foreach($dayLectures as $lecture)
+                            <div class="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">
+                                {{$lecture->time_from}} - {{$lecture->time_to}} {{$lecture->time_to}} 
+                            </div>
+                        @endforeach
 
-                                    {{-- Event title --}}
-                                    {{ $event->title }}
-                                
-                                </a>
-                            @endforeach
-                        </div>
+                        @foreach($dayTasks as $task)
+                            <div class="px-2 py-1 rounded text-xs {{ $task->is_completed ? 'bg-gray-200 text-gray-500 line-through' : 'bg-amber-100 text-amber-800' }}">
+                                {{ $task->title }} 
+                            </div>
+                        @endforeach
 
-                    @endif       
+                        @foreach($dayAssessments as $assessment)
+                            <div class="px-2 py-1 rounded text-xs bg-red-100 text-red-800 ">
+                                {{ $assessment->title }} 
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 @php
-                    
                     $day->addDay(); //goes to next calendar day
                 @endphp
 
@@ -127,8 +127,9 @@
 
                 <label>Type</label>
 
-                <select name="type" class="w-full border rounded px-3 py-2 mb-4" required>
+                <select x-model="eventType" name="type" class="w-full border rounded px-3 py-2 mb-4" required>
 
+                    <option value="">Select type</option>
                     <option value="lecture">Lecture</option>
                     <option value="task">Task</option>
                     <option value="assessment">Assessment</option>
@@ -138,19 +139,24 @@
                 <label>Title</label>
 
                 <input type="text" name="title" class="w-full border rounded px-3 py-2 mb-4" required>
+                
+                <div x-show="eventType === 'task' || eventType === 'assessment'">
+                    <label>Description</label>
+                    <textarea name="description" class="w-full border rounded px-3 py-2 mb-4"></textarea>
 
-                <label>Description</label>
+                    <label>Link</label>
+                    <textarea name="link" class="w-full border rounded px-3 py-2 mb-4"></textarea>
+                </div>
 
-                <textarea name="description" class="w-full border rounded px-3 py-2 mb-4"></textarea>
+                    <div x-show="eventType === 'lecture'">
+                        <label>Start time</label>
 
-                <label>Start time</label>
+                        <input type="time" name="start_time" class="w-full border rounded px-3 py-2 mb-4" required>
 
-                <input type="time" name="start_time" class="w-full border rounded px-3 py-2 mb-4" required>
+                        <label>End time</label>
 
-                <label>End time</label>
-
-                <input type="time" name="end_time" class="w-full border rounded px-3 py-2 mb-4">
-
+                        <input type="time" name="end_time" class="w-full border rounded px-3 py-2 mb-4">
+                    </div>
                 <div class="flex gap-2">
 
                     <button type="submit" class="px-4 py-2 bg-teal-950 text-white rounded">Save</button>

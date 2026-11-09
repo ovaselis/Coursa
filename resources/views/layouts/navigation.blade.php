@@ -9,7 +9,7 @@
         
         <a href="{{route('dashboard')}}" class="hover:bg-teal-900 rounded-xl px-4 py-3">Dashboard</a>
         <a href="{{route('courses.index')}}" class="hover:bg-teal-900 rounded-xl px-4 py-3">Courses</a>
-        <a href="{{route('courses.index')}}" class="hover:bg-teal-900 rounded-xl px-4 py-3">Tasks</a>
+        <a href="{{route('tasks.index')}}" class="hover:bg-teal-900 rounded-xl px-4 py-3">Tasks</a>
         <a href="{{route('calendar.index')}}" class="hover:bg-teal-900 rounded-xl px-4 py-3">Calendar</a>
 
     </nav>

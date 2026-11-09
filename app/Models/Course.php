@@ -29,4 +29,19 @@ class Course extends Model
         return $this->hasMany(CalendarEvent::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    
+    public function assessment()
+    {
+        return $this->hasMany(Assessment::class);
+    }
+
+    public function scheduledLectures()
+    {
+        return $this->hasMany(ScheduledLecture::class);
+    }
+
 }
