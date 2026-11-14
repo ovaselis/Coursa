@@ -12,6 +12,9 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()){ return redirect()->route('dashboard');}
+
+
     return view('welcome');
 });
 
@@ -38,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notes/{note}/flashcards/generate',[FlashcardController::class, 'generate'])->name('flashcards.generate');
 
+    Route::get('/flashcards', [FlashcardController::class, 'index'])->name('flashcards.index');
+
+    Route::get('notes/{note}/flashcards', [FlashcardController::class, 'show'])->name('flashcards.show');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

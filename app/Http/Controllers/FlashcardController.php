@@ -12,6 +12,8 @@ class FlashcardController extends Controller
     
     public function generate(Note $note)
     {
+        abort_if($note->lecture->course->user_id !== auth()->id(), 403);
+
         $noteText = strip_tags($note->content); // removes HTML tags from note content
 
         $response = Http::timeout(120)->post( // Sends note content to API
@@ -20,7 +22,10 @@ class FlashcardController extends Controller
             'model' => 'llama3.1:8b',
 
             'prompt' => "
-                Create exactly 3 flashcards from this note.
+                Create flashcards from the note.
+
+                Generate as many flashcards as necessary to cover all important topics,
+                concepts, definitions, facts, relationships and subtopics contained in the note.
 
                 Return ONLY valid JSON in this format:
                 {
@@ -45,7 +50,12 @@ class FlashcardController extends Controller
             $response->json('response'),
             true
         );
+        
+        if(!isset($data['flashcards']) || !is_array($data['flashcards'])) { // checks if flashcards have been generated
+            return back()->with('error', 'Dailded to generate flashcards.');
+        }
 
+        $note->flashcards()->delete();
         foreach ($data['flashcards'] as $card) {
             Flashcard::create([
                 'note_id' => $note->id,
@@ -60,7 +70,9 @@ class FlashcardController extends Controller
 
     public function index()
     {
-        //
+        $courses = auth()->user()->courses;
+
+        return view('flashcards.index', compact('courses'));
     }
 
     /**
@@ -82,9 +94,13 @@ class FlashcardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Flashcard $flashcard)
+    public function show(Note $note)
     {
-        //
+        abort_if($note->lecture->course->user_id !== auth()->id(), 403);
+
+        $flashcards = $note->flashcards;
+
+        return view('flashcards.show', compact('note', 'flashcards'));
     }
 
     /**
