@@ -12,7 +12,7 @@ class Flashcard extends Model
         'answer',
     ];
 
-    public function note(){
+    public function note(){ //each flashcard only belongs to a single note
         return $this->belongsTo(Note::class);
     }
 

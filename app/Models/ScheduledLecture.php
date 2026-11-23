@@ -17,12 +17,12 @@ class ScheduledLecture extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            'date' => 'date', //turns date into a carbon date object
         ];
     }
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class); // sheduled lecture belongs to a single course
     }
 }

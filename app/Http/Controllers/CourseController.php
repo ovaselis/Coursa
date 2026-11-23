@@ -30,7 +30,7 @@ class CourseController extends Controller
         ]);
 
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = auth()->id(); //adds user id to validatoed fields
 
         Course::create($validated);
 
@@ -62,7 +62,7 @@ class CourseController extends Controller
             'info' => 'nullable|string'
         ]);
 
-        $course->update($validated);
+        $course->update($validated); //updates existing course with validated values
 
         return redirect()->route('courses.show', $course);
     }

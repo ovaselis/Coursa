@@ -19,10 +19,10 @@ class Assessment extends Model
     protected function casts(): array
     {
         return[
-            'date' => 'date',
+            'date' => 'date', //sets date column as date object
         ];
     }
-
+    //each assessment belongs to a single course
     public function course()
     {
         return $this->belongsTo(Course::class);

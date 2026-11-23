@@ -20,13 +20,13 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'deadline' => 'datetime',
+            'deadline' => 'datetime', //turns into a date time carbon object 
             'is_completed' => 'boolean'
 
         ];
 
     }
-
+    //each task has a single course
     public function course()
     {
         return $this->belongsTo(Course::class);

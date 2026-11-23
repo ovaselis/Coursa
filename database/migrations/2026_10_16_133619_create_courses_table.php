@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
+            //links course to user so it deletes when user deleted
 	        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 	        $table->string('name');
             $table->string('official_url')->nullable();

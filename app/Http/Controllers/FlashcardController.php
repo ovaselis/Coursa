@@ -12,6 +12,7 @@ class FlashcardController extends Controller
     
     public function generate(Note $note)
     {
+        //checks if note belongs to logged in user
         abort_if($note->lecture->course->user_id !== auth()->id(), 403);
 
         $noteText = strip_tags($note->content); // removes HTML tags from note content
@@ -19,8 +20,9 @@ class FlashcardController extends Controller
         $response = Http::timeout(120)->post( // Sends note content to API
         'http://127.0.0.1:11434/api/generate',
         [
-            'model' => 'llama3.1:8b',
+            'model' => 'llama3.1:8b', //specifies ollama model
 
+            //instructions for the ai model
             'prompt' => "
                 Create flashcards from the note.
 
@@ -38,25 +40,27 @@ class FlashcardController extends Controller
                 }
 
                 Note:
-                {$noteText}
-            ",
+                {$noteText} 
+            ", 
 
             'stream' => false, //waits for full response
             'format' => 'json', // json output
         ]
         );
 
-        $data = json_decode(
+        $data = json_decode( //turns json model response into PHP arraty
             $response->json('response'),
             true
         );
         
+
+        //checks if model responce contains a valid array
         if(!isset($data['flashcards']) || !is_array($data['flashcards'])) { // checks if flashcards have been generated
             return back()->with('error', 'Dailded to generate flashcards.');
         }
 
-        $note->flashcards()->delete();
-        foreach ($data['flashcards'] as $card) {
+        $note->flashcards()->delete(); //deletes notes previously generated flashcards
+        foreach ($data['flashcards'] as $card) { //create a record for every flashcard
             Flashcard::create([
                 'note_id' => $note->id,
                 'question' => $card['question'],
@@ -98,7 +102,7 @@ class FlashcardController extends Controller
     {
         abort_if($note->lecture->course->user_id !== auth()->id(), 403);
 
-        $flashcards = $note->flashcards;
+        $flashcards = $note->flashcards; //gets all flashcards of the note
 
         return view('flashcards.show', compact('note', 'flashcards'));
     }

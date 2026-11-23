@@ -12,6 +12,8 @@ class Note extends Model
 	'content',
     ];
 
+    //each note belongs to a single lecture and can have many flashcards
+
     public function lecture()
     {
 	return $this->belongsTo(Lecture::class);

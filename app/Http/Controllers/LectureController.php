@@ -27,7 +27,7 @@ class LectureController extends Controller
     public function store(Request $request, Course $course)
     {
         abort_if($course->user_id !== auth()->id(), 403);
-
+        //validates data from form
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'info' => 'nullable|string',
@@ -62,7 +62,7 @@ class LectureController extends Controller
     {
         abort_if($course->user_id !== auth()->id(), 403);
         abort_if($lecture->course_id !== $course->id, 404);
-
+        //validates edited data
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'info' => 'nullable|string',

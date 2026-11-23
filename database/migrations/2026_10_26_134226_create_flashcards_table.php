@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('flashcards', function (Blueprint $table) {
             $table->id();
-
+            //deletes flashcard if note it belongs to is deleted
             $table->foreignId('note_id')->constrained()->cascadeOnDelete();
 
             $table->text('question');

@@ -13,6 +13,8 @@ class Lecture extends Model
     'date',
     ];
  
+    //lecture belongs to a single course and can have many notes
+
     public function course()
     {
 	return $this->belongsTo(Course::class);

@@ -28,7 +28,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="flex-1 p-6">
+            <main class="ml-56 flex-1 p-6">
                 @yield('content')
             </main>
         </div>

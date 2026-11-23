@@ -13,27 +13,25 @@ class Course extends Model
         'lecturer',
         'info',
     ];   
-
+    
+    //each course has one user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    //each course van have many lectures, tasks, assessments and scheduled lectures
     public function lectures()
     {
         return $this->hasMany(Lecture::class);
     }
 
-    public function calendarEvents()
-    {
-        return $this->hasMany(CalendarEvent::class);
-    }
-
+   
     public function tasks()
     {
         return $this->hasMany(Task::class);
     }
-    
+
     public function assessment()
     {
         return $this->hasMany(Assessment::class);

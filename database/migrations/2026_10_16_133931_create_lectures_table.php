@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('lectures', function (Blueprint $table) {
             $table->id();
+            //deletes lecture if course deleted
 	        $table->foreignId('course_id')->constrained()->cascadeOnDelete();     
 	        $table->string('title');
             $table->text('info')->nullable();

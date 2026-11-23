@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            //deletes task if its course has been deleted
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
 
             $table->string('title');
             $table->string('link')->nullable();

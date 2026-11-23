@@ -5,7 +5,7 @@
 <div class="w-full">
     <a href="{{ route('courses.show', $course) }}" class="text-sm text-gray-500">Back to Course</a>
 
-    <form method="POST" action="{{
+    <form id="note-form" method="POST" action="{{
         $note ? route('courses.lectures.notes.update', [$course, $lecture, $note])
         : route('courses.lectures.notes.store', [$course, $lecture])
     }}">
@@ -21,12 +21,31 @@
 
         <x-editor :content="old('content', $note?->content)" />
 
-        <button type="submit" class="mt-5 px-5 py-2.5 bg-teal-950 text-white
+        
+
+    </form>
+
+    <div class="flex items-center gap-3 mt-5">
+
+        <button type="submit" form="note-form" class="h-11 px-5 bg-teal-950 text-white
                    rounded-lg hover:bg-teal-900 transition cursor-pointer">
             Save note
         </button>
 
-    </form>
+        @if($note)
+            <form method="POST" action="{{ route('courses.lectures.notes.destroy', [$course, $lecture, $note]) }}" onsubmit="return confirm('Do you want to delete this note?')">
+                @csrf
+                @method('DELETE')
+
+                <button type="submit" class="h-11 w-11 bg-red-800 flex items-center justify-center text-white rounded-lg
+                       hover:bg-red-700 transition cursor-pointer" title="Delete note">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+
+            </form>
+        @endif
+    </div>
+
     @if($note)
         <div class="mt-10 border-t border-gray-200 pt-8"
             x-data="{ studying: false, current: 0, flipped: false, 

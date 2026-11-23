@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('assessments', function (Blueprint $table) {
             $table->id();
+            //deletes assessment if its course has been deleted
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
 
             $table->string('title');

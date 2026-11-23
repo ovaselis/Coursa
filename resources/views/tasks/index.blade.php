@@ -13,7 +13,9 @@
                 <div class="bg-white border border-gray-200 rounded-2xl p-5">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <h2 class="text-xl font-semibold text-teal-950">{{ $task->title }}</h2>
+                            <a href="{{ route('tasks.edit', $task) }}">
+                                <h2 class="text-xl font-semibold {{ $task->is_completed ? 'text-gray-400 line-through' : 'text-teal-950' }}">{{ $task->title }}</h2>
+                            </a>
                             <p class="text-sm text-gray-500 mt-1">{{ $task->course->name }}</p>
                             <p class="text-sm text-gray-500 mt-1">Deadline: {{ $task->deadline->format('d.m.Y') }}</p>
                             <p class="text-sm text-gray-500 mt-1">{{ $task->description }}</p>
@@ -24,8 +26,14 @@
                                 @method('PATCH')
 
                                 <button type="submit" title="{{ $task->is_completed ? 'Mark incomplete' : 'Mark completed'}}"
-                                    class="w-5 h-5 rounded-full border border-teal-950 cursor-pointer mt-1 {{ $task->is_completed ? 'bg-teal-950' : 'bg-white' }}">
-                                </button>
+                                    class="mt-3 flex items-center gap-2 text-sm text-teal-950 cursor-pointer">
+                                    <span>Completed:</span>
+                                    <span class="w-5 h-5 flex items-center justify-center rounded border border-teal-950 {{ $task->is_completed ? 'bg-teal-950 text-white' : 'bg-white' }}">
+                                        @if($task->is_completed)
+                                            <i data-lucide="check" class="w-4 h-4"></i>
+                                        @endif
+                                    </span>
+                                </button>   
                             </form>
                         </div>
                     </div>
